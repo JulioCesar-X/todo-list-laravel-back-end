@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  laravel-app:
+    build: .
+    ports:
+      - "8080:80"
+    volumes:
+      - ./todolist-back:/var/www/html
+    depends_on:
+      - xampp
+
+  xampp:
+    build:
+      context: .
+      dockerfile: xampp.Dockerfile
+    ports:
+      - "8000:80"
+      - "3307:3306"
+      - "8443:443"
+    volumes:
+      - ./todolist-back:/var/www/html
