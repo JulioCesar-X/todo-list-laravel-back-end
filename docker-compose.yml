@@ -1,21 +1,20 @@
-version: '3.8'
+version: '3.9'
 services:
-  laravel-app:
-    build: .
-    ports:
-      - "8080:80"
+  postgresql:
+    container_name: postgres_container
+    image: postgres
+    restart: always
     volumes:
-      - ./todolist-back:/var/www/html
-    depends_on:
-      - xampp
-
-  xampp:
-    build:
-      context: .
-      dockerfile: xampp.Dockerfile
+      - /home/julio/projects/postgres-container-docker/data:/var/lib/postgresql/data
+      - ./init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
     ports:
-      - "8000:80"
-      - "3307:3306"
-      - "8443:443"
-    volumes:
-      - ./todolist-back:/var/www/html
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=${POSTGRES_DATABASE:-postgres_db}
+      - POSTGRES_USER=${POSTGRES_USER:-root}
+    networks:
+      - app-network
+networks:
+  app-network:
+    driver: bridge
